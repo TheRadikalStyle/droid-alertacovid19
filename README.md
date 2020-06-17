@@ -3,14 +3,13 @@ Aplicación muestra realizada para usar los datos proporcionados por la Secretar
 
 # Screenshots
 ___
+<img height="700" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_1.png" />
 <br>
-<img height="500" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_1.png" />
+<img height="700" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_2.png" />
 <br>
-<img height="500" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_2.png" />
+<img height="700" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_3.png" />
 <br>
-<img height="500" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_3.png" />
+<img height="700" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_4.png" />
 <br>
-<img height="500" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_4.png" />
-<br>
-<img height="500" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_5.png" />
+<img height="700" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_5.png" />
 <br>
