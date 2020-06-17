@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Alerta COVID-19 NL</string>
+    <string name="bottomnav_title_home">Home</string>
+    <string name="bottomnav_title_mapa">Mapa</string>
+    <string name="bottomnav_title_cuestionario">Cuestionario COVID-19</string>
+    <string name="bottomnav_title_contacto">Contacto</string>
+    <string name="fragment_map_bottomsheet_title">Detalle de casos</string>
+    <string name="fragment_map_bottomsheet_totales">Casos confirmados totales: %d</string>
+    <string name="fragment_map_markersnippet_confirmados">Casos confirmados: %d</string>
+    <string name="init_error">Error de inicialización, intenta nuevamente</string>
+    <string name="network_error">Error de red, intenta nuevamente</string>
+    <string name="contacto_cardview1_title">Mantente informado en nuestras redes oficiales</string>
+    <string name="contacto_cardview2_title">Llama en caso de dudas\n070</string>
+    <string name="contacto_cardview1_textfb">/SecretariaSaludNL</string>
+    <string name="contacto_cardview1_url_fb_complete">http://www.facebook.com/SecretariaSaludNL</string>
+    <string name="contacto_cardview1_url_fb">fb://facewebmodal/f?href=https://www.facebook.com/SecretariaSaludNL</string>
+    <string name="contacto_cardview1_textwebpage">saludnl.gob.mx</string>
+    <string name="contacto_cardview1_url_webpage">http://www.saludnl.gob.mx</string>
+    <string name="contacto_call_number">tel:070</string>
+    <string name="contacto_cardview3_title">Acerca de</string>
+    <string name="contacto_cardview3_ssnl">Servicios de Salud de Nuevo León</string>
+    <string name="main_activity_dialog_nointernet_title">Caracteristica deshabilitada</string>
+    <string name="main_activity_dialog_nointernet_message">Para asegurarnos que tengas la información actual, necesitas conexión a internet</string>
+    <string name="main_activity_dialog_nointernet_ok">OK</string>
+</resources>

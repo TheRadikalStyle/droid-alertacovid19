@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "943159874350",
+    "firebase_url": "https://ssnl-alertacovid19.firebaseio.com",
+    "project_id": "ssnl-alertacovid19",
+    "storage_bucket": "ssnl-alertacovid19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:943159874350:android:eb75261a30bb4e8fd4e0bf",
+        "android_client_info": {
+          "package_name": "mx.gob.saludnl.alertacovid_19nl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "943159874350-cfr3blcf0hqr5q1hbq5t2klouble6h2u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6MP7GPTIy5skdAb4B7r6HApa--4f6eVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "943159874350-cfr3blcf0hqr5q1hbq5t2klouble6h2u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "943159874350-jqat40f2205srbga9vhcunnpqvbd5n1s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "mx.gob.ssnl.AlertaCOVID19"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

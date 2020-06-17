@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+   <!-- <item
+        android:id="@+id/bottomnavigation_informacion"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/bottomnav_title_home" /> -->
+
+    <item
+        android:id="@+id/bottomnavigation_mapa"
+        android:icon="@drawable/mapa_grey"
+        android:title="@string/bottomnav_title_mapa" />
+
+    <item
+        android:id="@+id/bottomnavigation_cuestionario"
+        android:icon="@drawable/encuesta_grey"
+        android:title="@string/bottomnav_title_cuestionario" />
+
+    <item
+        android:id="@+id/bottomnavigation_contacto"
+        android:icon="@drawable/phone_grey"
+        android:title="@string/bottomnav_title_contacto" />
+</menu>

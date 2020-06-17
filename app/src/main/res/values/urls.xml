@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="url_cuestionario"></string>
+    <string name="url_map_service"></string>
+    <string name="url_heatmap_service"></string>
+    <string name="info_coronavirus">http://www.nl.gob.mx/coronavirus</string>
+</resources>

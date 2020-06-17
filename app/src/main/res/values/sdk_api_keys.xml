@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="intercom_appid"></string>
+    <string name="intercom_apikey"></string>
+</resources>
