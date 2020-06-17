@@ -13,3 +13,4 @@ ___
 <br>
 <img height="700" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_5.png" />
 <br>
+<img height="700" src="https://github.com/TheRadikalStyle/droid-alertacovid19/blob/master/screenshots/screenshot_6.png" />
