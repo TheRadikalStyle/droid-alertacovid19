@@ -13,6 +13,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.theradikalsoftware.alertacovid_19nl.retrofit.models.CasosModel;
+import com.theradikalsoftware.alertacovid_19nl.retrofit.models.InsideJSONModel;
+import com.theradikalsoftware.alertacovid_19nl.retrofit.services.CasosService;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -25,16 +28,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.intercom.android.sdk.Intercom;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends FragmentActivity implements FragmentMap.OnFragmentMapInteractionListener {
-    ArrayList<JsonData> dataToMap = new ArrayList<>();
+    ArrayList<InsideJSONModel> dataToMap = new ArrayList<>();
     ArrayList<LocationsData> heatmapDataToMap = new ArrayList<>();
     int chatButtonPaddingBottom = 0;
     final String TAG_MAP = "FRAG_MAP";
     final String TAG_CUESTIONARIO = "FRAG_CUESTIONARIO";
     final String TAG_CONTACTO = "FRAG_CONTACTO";
+    String lastmodify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +60,7 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
                 switch (item.getItemId()){
                     case R.id.bottomnavigation_mapa:
                         FragmentMap fragmentMap = new FragmentMap();
+                        fragmentMap.lastModify = lastmodify;
                         fragmentMap.data = dataToMap;
                         fragmentMap.heatData = heatmapDataToMap;
                         FragmentChanger(fragmentMap, TAG_MAP);
@@ -118,7 +128,29 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
     }
 
     private void GetJSONCasos(){
-        RequestQueue volleyRequest = Volley.newRequestQueue(this);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getResources().getString(R.string.api_services))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        CasosService service = retrofit.create(CasosService.class);
+
+        Call<CasosModel> casos = service.getAllCasos();
+        casos.enqueue(new Callback<CasosModel>() {
+            @Override
+            public void onResponse(Call<CasosModel> call, retrofit2.Response<CasosModel> response) {
+                Log.d("Retro ->", "Exito");
+                dataToMap.addAll(response.body().data);
+                lastmodify = response.body().lastmodify;
+            }
+
+            @Override
+            public void onFailure(Call<CasosModel> call, Throwable t) {
+                Log.d("Retro ->", "Fail");
+            }
+        });
+
+        /*RequestQueue volleyRequest = Volley.newRequestQueue(this);
         String url = getResources().getString(R.string.url_map_service);
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url,null ,new Response.Listener<JSONArray>() {
@@ -157,7 +189,7 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
             }
         });
 
-        volleyRequest.add(request);
+        volleyRequest.add(request);*/
     }
 
     private void GetJSONHeatmap(){

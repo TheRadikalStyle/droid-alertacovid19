@@ -28,6 +28,8 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.theradikalsoftware.alertacovid_19nl.retrofit.models.CasosModel;
+import com.theradikalsoftware.alertacovid_19nl.retrofit.models.InsideJSONModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,7 @@ import io.intercom.android.sdk.Intercom;
 public class FragmentMap extends Fragment implements OnMapReadyCallback {
     MapView mapView;
     GoogleMap map;
-    ArrayList<JsonData> data;
+    ArrayList<InsideJSONModel> data;
     ArrayList<LocationsData> heatData;
     TextView lastModifyTXV;
     LinearLayout bottomsheet;
@@ -51,6 +53,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
     RecyclerView.LayoutManager layoutManager;
     MyAdapter mAdapter;
     Button refreshData;
+    String lastModify;
 
     private OnFragmentMapInteractionListener mCallback;
 
@@ -59,7 +62,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         // Required empty public constructor
     }
 
-    public static FragmentMap newInstance(String param1, String param2) {
+    public static FragmentMap newInstance() {
         FragmentMap fragment = new FragmentMap();
         //Bundle args = new Bundle();
         //fragment.setArguments(args);
@@ -176,15 +179,15 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void DrawMarkers(ArrayList<JsonData> data, GoogleMap googleMap) {
+    private void DrawMarkers(ArrayList<InsideJSONModel> data, GoogleMap googleMap) {
         ArrayList<LocationsData> dataLocations = new ArrayList<>();
         LocationsData locData;
 
         for (int x = 0; x < data.size(); x++){
             if(x == 0){
-                lastModifyTXV.setText(data.get(x).lastModify);
+                lastModifyTXV.setText(lastModify);
             }else{
-                String[] loc = data.get(x).ubicacion.split(",");
+                String[] loc = data.get(x).latlong.split(",");
                 LatLng location = new LatLng(Double.parseDouble(loc[0]), Double.parseDouble(loc[1]));
 
                 locData = new LocationsData();
@@ -195,7 +198,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
                 googleMap.addMarker(new MarkerOptions()
                         .position(location)
                         .title(data.get(x).municipio)
-                        .snippet(String.format(getResources().getString(R.string.fragment_map_markersnippet_confirmados),  Integer.parseInt(data.get(x).getCasosConfirmados())))
+                        .snippet(String.format(getResources().getString(R.string.fragment_map_markersnippet_confirmados),  data.get(x).casosconfirmados))
                 );
             }
         }
@@ -227,7 +230,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
             mOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
     }
 
-    private void SetResumenOnBottomSheet(ArrayList<JsonData> data) {
+    private void SetResumenOnBottomSheet(ArrayList<InsideJSONModel> data) {
         mAdapter = new MyAdapter(data);
         recyclerviewDataDetail.setAdapter(mAdapter);
 
@@ -235,7 +238,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         int confirmadosTotales = 0;
         for(int o = 0; o < data.size(); o++) {
             if (o > 0) {
-                confirmadosTotales = confirmadosTotales + Integer.parseInt(data.get(o).casosConfirmados);
+                confirmadosTotales = confirmadosTotales + data.get(o).casosconfirmados;
             }
         }
         totalesConfirmados.setText(String.format(getResources().getString(R.string.fragment_map_bottomsheet_totales), confirmadosTotales));
@@ -250,7 +253,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 
 //ViewHolder Section
 class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private ArrayList<JsonData> mDataSet;
+    private ArrayList<CasosModel> mDataSet;
 
     public MyAdapter(ArrayList data){
         mDataSet = data;
@@ -277,8 +280,8 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.municipioTXV.setText(mDataSet.get(position).municipio);
-        holder.casosTXV.setText(mDataSet.get(position).casosConfirmados);
+        holder.municipioTXV.setText(mDataSet.get(position).data.get(0).municipio);
+        holder.casosTXV.setText(mDataSet.get(position).data.get(0).casosconfirmados);
     }
 
     @Override

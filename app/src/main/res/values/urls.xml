@@ -4,4 +4,5 @@
     <string name="url_map_service"></string>
     <string name="url_heatmap_service"></string>
     <string name="info_coronavirus">http://www.nl.gob.mx/coronavirus</string>
+    <string name="api_services">http://201.144.106.133/services/alertacovid19/</string>
 </resources>
