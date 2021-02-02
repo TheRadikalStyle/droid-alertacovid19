@@ -1,8 +1,9 @@
-package com.theradikalsoftware.alertacovid_19nl;
+package com.theradikalsoftware.alertacovid_19nl.main;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -13,11 +14,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.theradikalsoftware.alertacovid_19nl.main.fragments.FragmentContacto;
+import com.theradikalsoftware.alertacovid_19nl.main.fragments.FragmentCuestionario;
+import com.theradikalsoftware.alertacovid_19nl.main.fragments.FragmentMap;
+import com.theradikalsoftware.alertacovid_19nl.LocationsData;
+import com.theradikalsoftware.alertacovid_19nl.R;
+import com.theradikalsoftware.alertacovid_19nl.Tools;
 import com.theradikalsoftware.alertacovid_19nl.retrofit.models.CasosModel;
 import com.theradikalsoftware.alertacovid_19nl.retrofit.models.InsideJSONModel;
 import com.theradikalsoftware.alertacovid_19nl.retrofit.services.CasosService;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -37,8 +45,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends FragmentActivity implements FragmentMap.OnFragmentMapInteractionListener {
-    ArrayList<InsideJSONModel> dataToMap = new ArrayList<>();
-    ArrayList<LocationsData> heatmapDataToMap = new ArrayList<>();
+    List<InsideJSONModel> data;
     int chatButtonPaddingBottom = 0;
     final String TAG_MAP = "FRAG_MAP";
     final String TAG_CUESTIONARIO = "FRAG_CUESTIONARIO";
@@ -59,17 +66,18 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.bottomnavigation_mapa:
-                        FragmentMap fragmentMap = new FragmentMap();
-                        fragmentMap.lastModify = lastmodify;
-                        fragmentMap.data = dataToMap;
-                        fragmentMap.heatData = heatmapDataToMap;
-                        FragmentChanger(fragmentMap, TAG_MAP);
+                        FragmentMap map = FragmentMap.newInstance();
+                        Bundle bundle =  new Bundle();
+                        bundle.putString("bLastModify", lastmodify);
+                        bundle.putParcelableArrayList("bData", (ArrayList<? extends Parcelable>) data);
+
+                        FragmentChanger(map, TAG_MAP, bundle);
                         break;
                     case R.id.bottomnavigation_cuestionario:
-                        FragmentChanger(new FragmentCuestionario(), TAG_CUESTIONARIO);
+                        FragmentChanger(new FragmentCuestionario(), TAG_CUESTIONARIO, null);
                         break;
                     case R.id.bottomnavigation_contacto:
-                        FragmentChanger(new FragmentContacto(), TAG_CONTACTO);
+                        FragmentChanger(new FragmentContacto(), TAG_CONTACTO, null);
                         break;
                 }
                 return true;
@@ -83,13 +91,15 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
             }
         });
 
-        FragmentChanger(new FragmentMap(), TAG_MAP);
-        navView.setSelectedItemId(R.id.bottomnavigation_mapa);
+        //FragmentChanger(new FragmentMap(), TAG_MAP, null);
+        //navView.setSelectedItemId(R.id.bottomnavigation_mapa);
     }
 
-    public void FragmentChanger(Fragment fragment, String TAG){
+    public void FragmentChanger(Fragment fragment, String TAG, @Nullable Bundle variables){
         if(!TAG.equals(TAG_CONTACTO)){
             if(InternetChecker()){
+                if(variables != null)
+                    fragment.setArguments(variables);
                 FragmentManager fragmentManager = this.getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.nav_host_fragment, fragment, TAG);
@@ -140,8 +150,17 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
             @Override
             public void onResponse(Call<CasosModel> call, retrofit2.Response<CasosModel> response) {
                 Log.d("Retro ->", "Exito");
-                dataToMap.addAll(response.body().data);
-                lastmodify = response.body().lastmodify;
+
+                CasosModel casos = response.body();
+                lastmodify = casos.getLastmodify();
+                data = casos.getData();
+
+                FragmentMap map = FragmentMap.newInstance();
+                Bundle bundle =  new Bundle();
+                bundle.putString("bLastModify", lastmodify);
+                bundle.putParcelableArrayList("bData", (ArrayList<? extends Parcelable>) data);
+
+                FragmentChanger(map, TAG_MAP, bundle);
             }
 
             @Override
@@ -192,7 +211,12 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
         volleyRequest.add(request);*/
     }
 
-    private void GetJSONHeatmap(){
+    @Override
+    public void onFragmentMapInteraction(boolean needsRefresh) {
+
+    }
+
+    /*private void GetJSONHeatmap(){
         RequestQueue volleyRequest = Volley.newRequestQueue(this);
         String url = getResources().getString(R.string.url_heatmap_service);
 
@@ -230,9 +254,9 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
         });
 
         volleyRequest.add(request);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onFragmentMapInteraction(boolean needsRefresh) {
         if(needsRefresh){
             if(dataToMap.size() > 0)
@@ -254,6 +278,6 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
             }else{
                 Toast.makeText(this, getResources().getString(R.string.network_error), Toast.LENGTH_SHORT).show();
             }*/
-        }
-    }
+     //   }
+    //}
 }

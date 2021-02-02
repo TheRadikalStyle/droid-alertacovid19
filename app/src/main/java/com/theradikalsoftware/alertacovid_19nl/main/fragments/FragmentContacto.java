@@ -1,4 +1,4 @@
-package com.theradikalsoftware.alertacovid_19nl;
+package com.theradikalsoftware.alertacovid_19nl.main.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -21,6 +21,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.theradikalsoftware.alertacovid_19nl.R;
+import com.theradikalsoftware.alertacovid_19nl.Tools;
 
 import java.util.Calendar;
 

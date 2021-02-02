@@ -1,4 +1,4 @@
-package com.theradikalsoftware.alertacovid_19nl;
+package com.theradikalsoftware.alertacovid_19nl.main.fragments;
 
 import android.os.Bundle;
 
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.theradikalsoftware.alertacovid_19nl.R;
 
 import io.intercom.android.sdk.Intercom;
 

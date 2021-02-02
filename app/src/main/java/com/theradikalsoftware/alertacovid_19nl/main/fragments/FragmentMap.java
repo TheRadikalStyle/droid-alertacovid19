@@ -1,4 +1,4 @@
-package com.theradikalsoftware.alertacovid_19nl;
+package com.theradikalsoftware.alertacovid_19nl.main.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -28,6 +28,8 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
+import com.theradikalsoftware.alertacovid_19nl.LocationsData;
+import com.theradikalsoftware.alertacovid_19nl.R;
 import com.theradikalsoftware.alertacovid_19nl.retrofit.models.CasosModel;
 import com.theradikalsoftware.alertacovid_19nl.retrofit.models.InsideJSONModel;
 
@@ -44,8 +46,6 @@ import io.intercom.android.sdk.Intercom;
 public class FragmentMap extends Fragment implements OnMapReadyCallback {
     MapView mapView;
     GoogleMap map;
-    List<InsideJSONModel> data;
-    ArrayList<LocationsData> heatData;
     TextView lastModifyTXV;
     LinearLayout bottomsheet;
     CardView cardviewLastModify;
@@ -53,7 +53,10 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
     RecyclerView.LayoutManager layoutManager;
     MyAdapter mAdapter;
     Button refreshData;
+
+
     String lastModify;
+    List<InsideJSONModel> data;
 
     private OnFragmentMapInteractionListener mCallback;
 
@@ -64,18 +67,23 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 
     public static FragmentMap newInstance() {
         FragmentMap fragment = new FragmentMap();
-        //Bundle args = new Bundle();
-        //fragment.setArguments(args);
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
+            lastModify = getArguments().getString("bLastModify");
+            data = getArguments().getParcelableArrayList("bData");
+            Log.d("Presco ->", "onCreate data setted");
         }
+
+        // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
+        MapsInitializer.initialize(this.getActivity());
     }
 
     @Override
@@ -96,7 +104,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         refreshData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.onFragmentMapInteraction(true);
+                //mCallback.onFragmentMapInteraction(true);
+                Log.d("PRESTO pressed", String.valueOf(data.size()));
             }
         });
 
@@ -125,8 +134,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
-        MapsInitializer.initialize(this.getActivity());
+
 
         return rootView;
     }
@@ -167,44 +175,39 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d("Presco ->", "onMapReady");
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(25.6915233,-100.3192888), 12.0f));
         googleMap.setMinZoomPreference(7.0f);
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-        if(data.size() == 0){
-            refreshData.setVisibility(View.VISIBLE);
-        }else{
-            DrawMarkers(data, googleMap);
-            SetResumenOnBottomSheet(data);
-        }
+        if(data != null){
+            Log.d("Presco ->", "data no es null");
+            if(data.size() == 0){
+                Log.d("Presco ->", "data size es 0");
+                refreshData.setVisibility(View.VISIBLE);
+            }else{
+                Log.d("Presco ->", "data size es mayor a 0");
+                DrawMarkers(data, googleMap);
+                SetResumenOnBottomSheet(data);
+            }
+        }else{ refreshData.setVisibility(View.VISIBLE); Log.d("Presco ->", "data es null"); }
     }
 
     private void DrawMarkers(List<InsideJSONModel> data, GoogleMap googleMap) {
-        ArrayList<LocationsData> dataLocations = new ArrayList<>();
-        LocationsData locData;
+        Log.d("Presco ->", "Inside draw markers");
+        if(lastModify != null)
+            lastModifyTXV.setText(lastModify);
 
-        for (int x = 0; x < data.size(); x++){
-            if(x == 0){
-                lastModifyTXV.setText(lastModify);
-            }else{
-                String[] loc = data.get(x).latlong.split(",");
-                LatLng location = new LatLng(Double.parseDouble(loc[0]), Double.parseDouble(loc[1]));
-
-                locData = new LocationsData();
-                locData.latitude = location.latitude;
-                locData.longitude = location.longitude;
-                dataLocations.add(locData);
-
-                googleMap.addMarker(new MarkerOptions()
-                        .position(location)
-                        .title(data.get(x).municipio)
-                        .snippet(String.format(getResources().getString(R.string.fragment_map_markersnippet_confirmados),  data.get(x).casosconfirmados))
-                );
-            }
+        for (InsideJSONModel inside : data) {
+            googleMap.addMarker(new MarkerOptions()
+                    .position(inside.getLatLongObject())
+                    .title(inside.getMunicipio())
+                    .snippet(String.format(String.format(getResources().getString(R.string.fragment_map_markersnippet_confirmados),  inside.getCasosconfirmados())))
+            );
         }
 
-        if(heatData.size() > 0)
-            DrawHeatMap(heatData, googleMap);
+        //if(heatData.size() > 0)
+        //    DrawHeatMap(heatData, googleMap);
     }
 
     private void DrawHeatMap(ArrayList<LocationsData> location, GoogleMap googleMap) {
@@ -234,14 +237,11 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         mAdapter = new MyAdapter(data);
         recyclerviewDataDetail.setAdapter(mAdapter);
 
-        TextView totalesConfirmados = bottomsheet.findViewById(R.id.fragment_map_textview_casosconfirmados_totales);
         int confirmadosTotales = 0;
-        for(int o = 0; o < data.size(); o++) {
-            if (o > 0) {
-                confirmadosTotales = confirmadosTotales + data.get(o).casosconfirmados;
-            }
+        TextView totalesConfirmados = bottomsheet.findViewById(R.id.fragment_map_textview_casosconfirmados_totales);
+        for (InsideJSONModel inside: data) {
+            confirmadosTotales = confirmadosTotales + inside.getCasosconfirmados();
         }
-        totalesConfirmados.setText(String.format(getResources().getString(R.string.fragment_map_bottomsheet_totales), confirmadosTotales));
     }
 
     public interface OnFragmentMapInteractionListener {
@@ -253,12 +253,10 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 
 //ViewHolder Section
 class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private List<CasosModel> mDataSet;
-    private List<InsideJSONModel> datos;
+    private List<InsideJSONModel> mDataSet;
 
-    public MyAdapter(List<CasosModel> data){
+    public MyAdapter(List<InsideJSONModel> data){
         mDataSet = data;
-        this.datos.addAll(mDataSet.get(0).data);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -282,8 +280,8 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.municipioTXV.setText(mDataSet.get(position).data.get(0).municipio);
-        holder.casosTXV.setText(mDataSet.get(position).data.get(0).casosconfirmados);
+        holder.municipioTXV.setText(mDataSet.get(position).getMunicipio());
+        holder.casosTXV.setText(String.valueOf(mDataSet.get(position).getCasosconfirmados()));
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.theradikalsoftware.alertacovid_19nl.main.MainActivity;
 
 public class Splashscreen extends Activity {
 
