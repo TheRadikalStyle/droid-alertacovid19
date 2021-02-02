@@ -7,17 +7,10 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.theradikalsoftware.alertacovid_19nl.main.fragments.FragmentContacto;
 import com.theradikalsoftware.alertacovid_19nl.main.fragments.FragmentCuestionario;
 import com.theradikalsoftware.alertacovid_19nl.main.fragments.FragmentMap;
-import com.theradikalsoftware.alertacovid_19nl.LocationsData;
 import com.theradikalsoftware.alertacovid_19nl.R;
 import com.theradikalsoftware.alertacovid_19nl.Tools;
 import com.theradikalsoftware.alertacovid_19nl.retrofit.models.CasosModel;
@@ -30,10 +23,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.Fragment;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

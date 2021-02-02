@@ -1,7 +1,6 @@
 package com.theradikalsoftware.alertacovid_19nl.main.fragments;
 
 import android.content.Context;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,9 +28,9 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
-import com.theradikalsoftware.alertacovid_19nl.LocationsData;
+import com.theradikalsoftware.alertacovid_19nl.main.models.LocationsData;
 import com.theradikalsoftware.alertacovid_19nl.R;
-import com.theradikalsoftware.alertacovid_19nl.retrofit.models.CasosModel;
+import com.theradikalsoftware.alertacovid_19nl.main.recycler.MyAdapter;
 import com.theradikalsoftware.alertacovid_19nl.retrofit.models.InsideJSONModel;
 
 import java.util.ArrayList;
@@ -39,11 +38,6 @@ import java.util.List;
 
 import io.intercom.android.sdk.Intercom;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentMap#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class FragmentMap extends Fragment implements OnMapReadyCallback {
     MapView mapView;
     GoogleMap map;
@@ -81,7 +75,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         if (getArguments() != null) {
             lastModify = getArguments().getString("bLastModify");
             data = getArguments().getParcelableArrayList("bData");
-            Log.d("Presco ->", "onCreate data setted");
         }
 
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
@@ -108,7 +101,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 //mCallback.onFragmentMapInteraction(true);
-                Log.d("PRESTO pressed", String.valueOf(data.size()));
             }
         });
 
@@ -178,29 +170,24 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d("Presco ->", "onMapReady");
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(25.6915233,-100.3192888), 12.0f));
         googleMap.setMinZoomPreference(7.0f);
         googleMap.getUiSettings().setMapToolbarEnabled(false);
 
         if(data != null){
-            Log.d("Presco ->", "data no es null");
             if(data.size() == 0){
-                Log.d("Presco ->", "data size es 0");
                 refreshData.setVisibility(View.VISIBLE);
             }else{
-                Log.d("Presco ->", "data size es mayor a 0");
                 DrawMarkers(data, googleMap);
                 SetResumenOnBottomSheet(data);
             }
-        }else{ refreshData.setVisibility(View.VISIBLE); Log.d("Presco ->", "data es null"); }
+        }else{ refreshData.setVisibility(View.VISIBLE); }
     }
 
     private void DrawMarkers(List<InsideJSONModel> data, GoogleMap googleMap) {
         ArrayList<LocationsData> heatData = new ArrayList<>();
         LocationsData locData;
 
-        Log.d("Presco ->", "Inside draw markers");
         if(lastModify != null)
             lastModifyTXV.setText(lastModify);
 
@@ -212,8 +199,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
             );
 
             locData = new LocationsData();
-            locData.latitude = inside.getLatitudeDouble();
-            locData.longitude = inside.getLongitudeDouble();
+            locData.setLatitude(inside.getLatitudeDouble());
+            locData.setLongitude(inside.getLongitudeDouble());
             heatData.add(locData);
         }
 
@@ -231,7 +218,6 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
             list.add(latLng);
         }
 
-        Log.d("ListLatLng", String.valueOf(list.size()));
         for(int v = 0; v < list.size(); v++){
             Log.d("List", list.get(0).toString());
         }
@@ -259,45 +245,5 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
     public interface OnFragmentMapInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentMapInteraction(boolean needsRefresh);
-    }
-}
-
-
-//ViewHolder Section
-class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private List<InsideJSONModel> mDataSet;
-
-    public MyAdapter(List<InsideJSONModel> data){
-        mDataSet = data;
-    }
-
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView municipioTXV, casosTXV;
-
-        public MyViewHolder(View v) {
-            super(v);
-           casosTXV = v.findViewById(R.id.recyclerviewitem_textview_casos);
-           municipioTXV = v.findViewById(R.id.recyclerviewitem_textview_municipio);
-        }
-    }
-
-    @NonNull
-    @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_map_datadetail_recyclerview_item, parent, false);
-
-        return new MyAdapter.MyViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.municipioTXV.setText(mDataSet.get(position).getMunicipio());
-        holder.casosTXV.setText(String.valueOf(mDataSet.get(position).getCasosconfirmados()));
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataSet.size();
     }
 }
