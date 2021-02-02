@@ -44,7 +44,7 @@ import io.intercom.android.sdk.Intercom;
 public class FragmentMap extends Fragment implements OnMapReadyCallback {
     MapView mapView;
     GoogleMap map;
-    ArrayList<InsideJSONModel> data;
+    List<InsideJSONModel> data;
     ArrayList<LocationsData> heatData;
     TextView lastModifyTXV;
     LinearLayout bottomsheet;
@@ -179,7 +179,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void DrawMarkers(ArrayList<InsideJSONModel> data, GoogleMap googleMap) {
+    private void DrawMarkers(List<InsideJSONModel> data, GoogleMap googleMap) {
         ArrayList<LocationsData> dataLocations = new ArrayList<>();
         LocationsData locData;
 
@@ -230,7 +230,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
             mOverlay = googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
     }
 
-    private void SetResumenOnBottomSheet(ArrayList<InsideJSONModel> data) {
+    private void SetResumenOnBottomSheet(List<InsideJSONModel> data) {
         mAdapter = new MyAdapter(data);
         recyclerviewDataDetail.setAdapter(mAdapter);
 
@@ -253,10 +253,12 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 
 //ViewHolder Section
 class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private ArrayList<CasosModel> mDataSet;
+    private List<CasosModel> mDataSet;
+    private List<InsideJSONModel> datos;
 
-    public MyAdapter(ArrayList data){
+    public MyAdapter(List<CasosModel> data){
         mDataSet = data;
+        this.datos.addAll(mDataSet.get(0).data);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

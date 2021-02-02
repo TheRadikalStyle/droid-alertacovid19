@@ -51,7 +51,7 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
         setContentView(R.layout.activity_main);
 
         GetJSONCasos();
-        GetJSONHeatmap();
+        //GetJSONHeatmap();
 
         final BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -240,7 +240,7 @@ public class MainActivity extends FragmentActivity implements FragmentMap.OnFrag
             if(heatmapDataToMap.size() > 0)
                 heatmapDataToMap.clear();
             GetJSONCasos();
-            GetJSONHeatmap();
+            //GetJSONHeatmap();
 
             FragmentMap fragmentMap = new FragmentMap();
             fragmentMap.data = dataToMap;
