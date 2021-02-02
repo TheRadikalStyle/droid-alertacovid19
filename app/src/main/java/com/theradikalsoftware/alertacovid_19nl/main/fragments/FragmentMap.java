@@ -1,6 +1,7 @@
 package com.theradikalsoftware.alertacovid_19nl.main.fragments;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -53,6 +54,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
     RecyclerView.LayoutManager layoutManager;
     MyAdapter mAdapter;
     Button refreshData;
+    TextView totalesConfirmados;
 
 
     String lastModify;
@@ -99,6 +101,7 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
 
         lastModifyTXV = rootView.findViewById(R.id.fragment_map_textview_text_lastmodif);
         cardviewLastModify = rootView.findViewById(R.id.fragment_map_cardview_container_lastmodif);
+        totalesConfirmados = rootView.findViewById(R.id.fragment_map_textview_casosconfirmados_totales);
 
         refreshData = rootView.findViewById(R.id.fragment_map_refreshdata);
         refreshData.setOnClickListener(new View.OnClickListener() {
@@ -194,6 +197,9 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
     }
 
     private void DrawMarkers(List<InsideJSONModel> data, GoogleMap googleMap) {
+        ArrayList<LocationsData> heatData = new ArrayList<>();
+        LocationsData locData;
+
         Log.d("Presco ->", "Inside draw markers");
         if(lastModify != null)
             lastModifyTXV.setText(lastModify);
@@ -204,10 +210,15 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
                     .title(inside.getMunicipio())
                     .snippet(String.format(String.format(getResources().getString(R.string.fragment_map_markersnippet_confirmados),  inside.getCasosconfirmados())))
             );
+
+            locData = new LocationsData();
+            locData.latitude = inside.getLatitudeDouble();
+            locData.longitude = inside.getLongitudeDouble();
+            heatData.add(locData);
         }
 
-        //if(heatData.size() > 0)
-        //    DrawHeatMap(heatData, googleMap);
+        if(heatData.size() > 0)
+            DrawHeatMap(heatData, googleMap);
     }
 
     private void DrawHeatMap(ArrayList<LocationsData> location, GoogleMap googleMap) {
@@ -238,10 +249,11 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback {
         recyclerviewDataDetail.setAdapter(mAdapter);
 
         int confirmadosTotales = 0;
-        TextView totalesConfirmados = bottomsheet.findViewById(R.id.fragment_map_textview_casosconfirmados_totales);
+
         for (InsideJSONModel inside: data) {
             confirmadosTotales = confirmadosTotales + inside.getCasosconfirmados();
         }
+        totalesConfirmados.setText(String.format(getResources().getString(R.string.fragment_map_bottomsheet_totales), confirmadosTotales));
     }
 
     public interface OnFragmentMapInteractionListener {

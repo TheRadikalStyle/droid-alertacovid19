@@ -24,6 +24,16 @@ public class InsideJSONModel implements Parcelable {
         return latLng;
     }
 
+    public Double getLatitudeDouble(){
+        String datos[] = getLatlong().split(",");
+        return Double.parseDouble(datos[0]);
+    }
+
+    public Double getLongitudeDouble(){
+        String datos[] = getLatlong().split(",");
+        return Double.parseDouble(datos[1]);
+    }
+
     @Override
     public int describeContents() {
         return 0;
